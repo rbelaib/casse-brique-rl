@@ -40,22 +40,40 @@ class DQNAgent:
         return np.argmax(q_values[0])  # Exploitation
 
     def replay(self, batch_size):
-        """Entraîne le modèle avec un échantillon de la mémoire."""
+        """Trains the model using a batch of experiences from memory."""
         if len(self.memory) < batch_size:
             return
+
+        # Sample a random batch from memory
         batch = random.sample(self.memory, batch_size)
-        for state, action, reward, next_state, done in batch:
+        
+        # Prepare states and next_states in a batched format
+        states = np.array([sample[0] for sample in batch])
+        next_states = np.array([sample[3] for sample in batch])
+
+        # Predict Q-values for all states and next_states in batch
+        q_values = self.model.predict(states)
+        q_values_next = self.model.predict(next_states)
+
+        # Prepare targets
+        for i, (state, action, reward, next_state, done) in enumerate(batch):
             target = reward
             if not done:
-                target += self.gamma * np.amax(self.model.predict(next_state[np.newaxis])[0])
-            target_f = self.model.predict(state[np.newaxis])
-            target_f[0][action] = target
-            self.model.fit(state[np.newaxis], target_f, epochs=1, verbose=0)
+                target += self.gamma * np.amax(q_values_next[i])  # Use predicted Q-values for next state
+            q_values[i][action] = target  # Update the Q-value for the action taken
 
-    def update_epsilon(self):
+        # Train the model on the entire batch in one step
+        self.model.fit(states, q_values, batch_size=batch_size, epochs=1, verbose=0)
+
+
+    def update_epsilon(self, reward_total):
         """Réduit epsilon pour moins d'exploration au fil du temps."""
         if self.epsilon > self.epsilon_min:
             self.epsilon *= self.epsilon_decay
+        if reward_total > -50:
+            self.epsilon *= 0.8
+        if reward_total > 0:
+            self.epsilon *= 0.5
 
     def save(self, path):
         """Sauvegarde le modèle."""

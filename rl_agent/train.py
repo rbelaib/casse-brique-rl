@@ -5,25 +5,28 @@ import time
 from rl_agent.environment import BrickBreakerEnv
 from rl_agent.agent import DQNAgent
 
-def train_agent(episodes=500, batch_size=32, delay=0.001):
+def train_agent(episodes=500, batch_size=32, delay=0.001, train=True):
     env = BrickBreakerEnv()
     agent = DQNAgent(state_size=env.observation_space, action_size=len(env.action_space))
-    initial_weights = agent.model.get_weights()
-    print("Initial weights:", initial_weights)
+    if train:
+        initial_weights = agent.model.get_weights()
+        print("Initial weights:", initial_weights)
+    if not train:
+        agent.load_model("models/final_models.h5")
+        agent.epsilon = 0.1
     
     for episode in range(episodes):
         state = env.reset()
         total_reward = 0
         while True:
             env.render()  # Permet de voir le jeu pendant l'entraînement
-            
-            # Ajoute une pause pour ralentir la vitesse d'exécution
             time.sleep(delay)
             
             action_index = agent.act(state)
             action = env.action_space[action_index]
             next_state, reward, done = env.step(action)
-            agent.remember(state, action_index, reward, next_state, done)
+            if train:
+                agent.remember(state, action_index, reward, next_state, done)
             state = next_state
             total_reward += reward
 
@@ -31,14 +34,15 @@ def train_agent(episodes=500, batch_size=32, delay=0.001):
                 print(f"Episode {episode + 1}/{episodes}, Score: {total_reward}")
                 break
 
-        agent.replay(batch_size)
-        agent.update_epsilon()
-        if episode == episodes - 1:
-            final_weights = agent.model.get_weights()
-            print("Final weights:", final_weights)
-            model_path="models/final_models.h5"
-            agent.save(model_path)
-            print(f"Model saved to {model_path}")
+        if train:
+            agent.replay(batch_size)
+            agent.update_epsilon(total_reward)
+            if episode == episodes - 1:
+                final_weights = agent.model.get_weights()
+                print("Final weights:", final_weights)
+                model_path="models/final_models.h5"
+                agent.save(model_path)
+                print(f"Model saved to {model_path}")
 
         
       # Ajoute une méthode pour évaluer les performances de l'agent

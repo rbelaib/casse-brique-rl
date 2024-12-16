@@ -8,12 +8,13 @@ def play_with_trained_agent(agent, game):
     state = game.reset()  # Réinitialiser le jeu
     done = False
     total_reward = 0
-    agent.epsilon = 0  # Désactiver l'exploration
+    agent.epsilon = 0.5  # Désactiver l'exploration
 
     while not done:
         action = agent.act(state)  # Ne pas explorer, utiliser la politique apprise
         print(f"Action: {action}")  # Afficher l'action dans la console
         state, reward, done = game.step(action)  # L'agent effectue une action et l'état change
+
         total_reward += reward  # Ajouter la récompense à la récompense totale
 
         # Mettre à jour le rendu graphique pour Tkinter
@@ -31,16 +32,19 @@ def play_with_trained_agent(agent, game):
 
 
 if __name__ == "__main__":
-    train_agent(episodes=10)  # Entraîne l'agent pour 500 épisodes
+    # train_agent(episodes=10)  # Entraîne l'agent pour 500 épisodes
     # print("Training complete. Evaluating agent...")
     # evaluate(num_episodes=1)  # Évaluation de l'agent après l'entraînement
     # env = BrickBreakerEnv()
     # agent = DQNAgent(state_size=env.observation_space, action_size=len(env.action_space))
     # agent.load_model("models/final_models.h5")  # Charger le modèle entraîné
     # print("Model loaded. Starting game...")
+    train_agent(train = False, episodes=1)  # Entraîne l'agent pour 500 épisodes
 
     # # Jouer avec l'agent entraîné
-    # play_with_trained_agent(agent, env)
+    # load the model and put it in the agent
+
+    #play_with_trained_agent(agent, env)
 
 
 
