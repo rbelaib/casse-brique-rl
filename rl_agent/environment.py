@@ -28,7 +28,7 @@ class BrickBreakerEnv:
         destroyed_bricks = self.game.check_for_destroyed_bricks()
 
         # Vérifie quelles briques sont nouvellement détruites
-        new_destroyed_bricks = [brick for brick in destroyed_bricks if id(brick) not in self.destroyed_bricks_set]
+        new_destroyed_bricks = [brick for brick in destroyed_bricks if brick not in self.destroyed_bricks_set]
 
         # Ajouter les nouvelles briques détruites à l'ensemble des briques déjà cassées
         for brick in new_destroyed_bricks:
