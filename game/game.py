@@ -100,26 +100,13 @@ class BrickBreakerGame:
         )
         
     def is_ball_colliding_with_brick(self, brick):
-        ball_x, ball_y = self.ball.get_coords()[:2]
-        ball_radius = self.ball.radius
-
-        # Récupération des coordonnées de la brique
-        brick_x1, brick_y1, brick_x2, brick_y2 = brick.get_coords()
-
-        # Vérification de la collision en tenant compte du rayon de la balle
-        closest_x = max(brick_x1, min(ball_x, brick_x2))
-        closest_y = max(brick_y1, min(ball_y, brick_y2))
-
-        # Calcul de la distance entre le centre de la balle et le point le plus proche de la brique
-        distance_x = ball_x - closest_x
-        distance_y = ball_y - closest_y
-
-        # Si la distance est inférieure ou égale au rayon de la balle, une collision a eu lieu
-        distance = math.sqrt(distance_x ** 2 + distance_y ** 2)
-
-        if distance < ball_radius:
-            print("COLLISION DETECTED !!")
-            return True
+        ball_coords = self.ball.get_coords()
+    # Collision avec les briques
+        for brick in self.bricks:
+            brick_coords = brick.get_coords()
+            if (ball_coords[2] >= brick_coords[0] and ball_coords[0] <= brick_coords[2] and
+                    ball_coords[3] >= brick_coords[1] and ball_coords[1] <= brick_coords[3]):
+                return True
         return False
 
 

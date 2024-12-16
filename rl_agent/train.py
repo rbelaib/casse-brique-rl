@@ -5,7 +5,7 @@ import time
 from rl_agent.environment import BrickBreakerEnv
 from rl_agent.agent import DQNAgent
 
-def train_agent(episodes=500, batch_size=32, delay=0.001, train=True):
+def train_agent(episodes=500, batch_size=32, delay=0.00001, train=True):
     env = BrickBreakerEnv()
     agent = DQNAgent(state_size=env.observation_space, action_size=len(env.action_space))
     if train:
@@ -13,7 +13,7 @@ def train_agent(episodes=500, batch_size=32, delay=0.001, train=True):
         print("Initial weights:", initial_weights)
     if not train:
         agent.load_model("models/final_models.h5")
-        agent.epsilon = 0.1
+        agent.epsilon = 0.3
     
     for episode in range(episodes):
         state = env.reset()

@@ -9,16 +9,16 @@ class DQNAgent:
     def __init__(self, state_size, action_size):
         self.state_size = state_size
         self.action_size = action_size
-        self.memory = deque(maxlen=2000)  # Replay buffer
+        self.memory = deque(maxlen=2000)
         self.gamma = 0.95  # Facteur de réduction
         self.epsilon = 1.0  # Taux d'exploration initial
-        self.epsilon_decay = 0.995
-        self.epsilon_min = 0.01
-        self.learning_rate = 0.001
+        self.epsilon_decay = 0.995 # Taux de décroissance de l'exploration à chaque epoch
+        self.epsilon_min = 0.01 # Taux d'exploration minimal
+        self.learning_rate = 0.001 # Taux d'apprentissage
         self.model = self._build_model()
 
     def _build_model(self):
-        """Construit le modèle du réseau neuronal."""
+        """Neural network assez simple"""
         model = tf.keras.Sequential([
             tf.keras.layers.Dense(24, input_dim=self.state_size, activation='relu'),
             tf.keras.layers.Dense(24, activation='relu'),
@@ -40,29 +40,26 @@ class DQNAgent:
         return np.argmax(q_values[0])  # Exploitation
 
     def replay(self, batch_size):
-        """Trains the model using a batch of experiences from memory."""
+        """Entraine le modèle en utilisant des expériences passées."""
         if len(self.memory) < batch_size:
             return
 
-        # Sample a random batch from memory
+        # Ecriture d'un batch aléatoire de la mémoire
         batch = random.sample(self.memory, batch_size)
         
-        # Prepare states and next_states in a batched format
+        # Prépare l'état et l'état suivant (pour que ça aille plus vite)
         states = np.array([sample[0] for sample in batch])
         next_states = np.array([sample[3] for sample in batch])
-
-        # Predict Q-values for all states and next_states in batch
         q_values = self.model.predict(states)
         q_values_next = self.model.predict(next_states)
 
-        # Prepare targets
         for i, (state, action, reward, next_state, done) in enumerate(batch):
             target = reward
             if not done:
-                target += self.gamma * np.amax(q_values_next[i])  # Use predicted Q-values for next state
-            q_values[i][action] = target  # Update the Q-value for the action taken
+                target += self.gamma * np.amax(q_values_next[i])  # On utilise les q-values de l'état suivant
+            q_values[i][action] = target  # On update la q-value de l'action choisie
 
-        # Train the model on the entire batch in one step
+        # entraînement du modèle sur le batch
         self.model.fit(states, q_values, batch_size=batch_size, epochs=1, verbose=0)
 
 
@@ -70,6 +67,8 @@ class DQNAgent:
         """Réduit epsilon pour moins d'exploration au fil du temps."""
         if self.epsilon > self.epsilon_min:
             self.epsilon *= self.epsilon_decay
+        # Si le modèle obtient un bon score, on réduit l'exploration plus rapidement
+        # Je ne sais pas si c'est vraiment une bonne idée, mais les résultats obtenus ne sont pas mauvais
         if reward_total > -50:
             self.epsilon *= 0.8
         if reward_total > 0:
@@ -82,15 +81,4 @@ class DQNAgent:
     def load_model(self, path):
         """Charge un modèle sauvegardé."""
         self.model = tf.keras.models.load_model(path, custom_objects={'mse': MeanSquaredError()})
-    
-    def save_agent(self, path):
-        """Sauvegarde l'agent."""
-        with open(path, 'wb') as f:
-            pickle.dump(self, f)
-    
-    def load_agent(path):
-        """Charge un agent sauvegardé."""
-        with open(path, 'rb') as f:
-            return pickle.load(f)
-            
 
