@@ -36,7 +36,7 @@ class DQNAgent:
         """Choisit une action en fonction de l'état."""
         if np.random.rand() <= self.epsilon:
             return random.choice(range(self.action_size))  # Exploration
-        q_values = self.model.predict(state[np.newaxis])
+        q_values = self.model.predict(state[np.newaxis], verbose=0)
         return np.argmax(q_values[0])  # Exploitation
 
     def replay(self, batch_size):
@@ -50,8 +50,8 @@ class DQNAgent:
         # Prépare l'état et l'état suivant (pour que ça aille plus vite)
         states = np.array([sample[0] for sample in batch])
         next_states = np.array([sample[3] for sample in batch])
-        q_values = self.model.predict(states)
-        q_values_next = self.model.predict(next_states)
+        q_values = self.model.predict(states, verbose=0)
+        q_values_next = self.model.predict(next_states, verbose=0)
 
         for i, (state, action, reward, next_state, done) in enumerate(batch):
             target = reward
@@ -70,9 +70,9 @@ class DQNAgent:
         # Si le modèle obtient un bon score, on réduit l'exploration plus rapidement
         # Je ne sais pas si c'est vraiment une bonne idée, mais les résultats obtenus ne sont pas mauvais
         if reward_total > -50:
-            self.epsilon *= 0.8
+            self.epsilon *= 0.9
         if reward_total > 0:
-            self.epsilon *= 0.5
+            self.epsilon *= 0.85
 
     def save(self, path):
         """Sauvegarde le modèle."""

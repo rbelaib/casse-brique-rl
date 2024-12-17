@@ -5,14 +5,14 @@ import time
 from rl_agent.environment import BrickBreakerEnv
 from rl_agent.agent import DQNAgent
 
-def train_agent(episodes=500, batch_size=32, delay=0.00001, train=True):
+def train_agent(episodes=500, batch_size=32, delay=0.00001, train=True, model_path="models/final_models.h5"):
     env = BrickBreakerEnv()
     agent = DQNAgent(state_size=env.observation_space, action_size=len(env.action_space))
     if train:
         initial_weights = agent.model.get_weights()
         print("Initial weights:", initial_weights)
     if not train:
-        agent.load_model("models/final_models.h5")
+        agent.load_model(model_path)
         agent.epsilon = 0.3
     
     for episode in range(episodes):
@@ -37,10 +37,10 @@ def train_agent(episodes=500, batch_size=32, delay=0.00001, train=True):
         if train:
             agent.replay(batch_size)
             agent.update_epsilon(total_reward)
-            if episode == episodes - 1:
+            # save the model every 50 episodes
+            if episode % 50 == 0 or episode == episodes - 1:
                 final_weights = agent.model.get_weights()
-                print("Final weights:", final_weights)
-                model_path="models/final_models.h5"
+                print("Weights:", final_weights)
                 agent.save(model_path)
                 print(f"Model saved to {model_path}")
 

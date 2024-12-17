@@ -72,15 +72,13 @@ class BrickBreakerGame:
             brick_coords = brick.get_coords()
             if (ball_coords[2] >= brick_coords[0] and ball_coords[0] <= brick_coords[2] and
                     ball_coords[3] >= brick_coords[1] and ball_coords[1] <= brick_coords[3]):
-                brick.destroy()
                 self.bricks.remove(brick)
                 self.ball.bounce_vertical()
                 self.update_score(10)  # Incrémenter le score
-                break
-
-        # Vérifier si la balle tombe en bas
-        if ball_coords[3] >= self.height:
-            self.restart_game()
+                brickid = id(brick)
+                brick.destroy()
+                return brickid
+        return None
 
     def update_score(self, points):
         """Met à jour le score et rafraîchit l'affichage."""
@@ -114,11 +112,6 @@ class BrickBreakerGame:
         """Boucle principale du jeu."""
         self.ball.move()
         self.check_collisions()
-
-        # Si contrôle automatique désactivé, permettre un mouvement continu de la raquette
-        if not self.manual_control:
-            self.paddle.move(0)  # Par exemple, l'IA ou une logique d'auto-mouvement
-
         self.window.after(10, self.run_game)
 
     def start(self):
@@ -126,13 +119,10 @@ class BrickBreakerGame:
         self.window.mainloop()
         
     def check_for_destroyed_bricks(self):
-        print("CHECK FOR DESTROYED BRICKS")
         destroyed_bricks = []
         for brick in self.bricks:
             if self.is_ball_colliding_with_brick(brick):
                 destroyed_bricks.append(brick)
-                self.bricks.remove(brick)
-                print("BRICK DESTROYED !!")
         return destroyed_bricks
 
 if __name__ == "__main__":

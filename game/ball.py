@@ -16,8 +16,8 @@ class Ball:
             x + radius, y + radius, 
             fill=color
         )
-        self.dx = 2  # Vitesse horizontale
-        self.dy = -2  # Vitesse verticale
+        self.dx = 4  # Vitesse horizontale
+        self.dy = -4  # Vitesse verticale
 
     def move(self):
         """

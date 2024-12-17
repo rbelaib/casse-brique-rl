@@ -39,7 +39,7 @@ if __name__ == "__main__":
     # agent = DQNAgent(state_size=env.observation_space, action_size=len(env.action_space))
     # agent.load_model("models/final_models.h5")  # Charger le modèle entraîné
     # print("Model loaded. Starting game...")
-    train_agent(train = False, episodes=1)  # Entraîne l'agent pour 500 épisodes
+    train_agent(train = True, episodes=500, model_path='models/banger.h5')  # Entraîne l'agent pour 500 épisodes
 
     # # Jouer avec l'agent entraîné
     # load the model and put it in the agent
