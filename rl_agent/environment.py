@@ -16,14 +16,14 @@ class BrickBreakerEnv:
         self.done = False
         return self.get_state()
 
-    def step(self, action):
+    def step(self, action, previous_brick_count):
         # Mouvement du paddle et de la balle
-        len_bricks = len(self.game.bricks)
+        reward_instant = 0
         self.game.paddle.move(action)
         self.game.ball.move()
         self.game.check_collisions()
-        reward_instant = 0
-        if len(self.game.bricks) < len_bricks:
+        len_bricks = len(self.game.bricks)
+        if len_bricks < previous_brick_count:
             reward_instant = 10
 
 
@@ -35,7 +35,7 @@ class BrickBreakerEnv:
         if len(self.game.bricks) == 0 or self.game.ball.get_coords()[3] >= self.game.height - 10:
             print("GAME OVER !!")
             self.done = True
-        return self.get_state(), reward_instant, self.done
+        return self.get_state(), reward_instant, self.done, len_bricks
 
 
     def get_state(self):

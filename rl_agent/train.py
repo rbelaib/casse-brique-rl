@@ -18,17 +18,19 @@ def play_agent(epochs=500, batch_size=32, delay=0.00001, train=True, model_path=
     for epoch in range(epochs):
         state = env.reset()
         total_reward = 0
+        previous_brick_count = len(env.game.bricks)
         while True:
             env.render()  # Permet de voir le jeu pendant l'entraînement
             time.sleep(delay)
             
             action_index = agent.act(state)
             action = env.action_space[action_index]
-            next_state, reward, done = env.step(action)
+            next_state, reward, done, current_brick_count = env.step(action, previous_brick_count)
             if train:
                 agent.remember(state, action_index, reward, next_state, done)
             state = next_state
             total_reward += reward
+            previous_brick_count = current_brick_count
 
             if done:
                 print(f"epoch {epoch + 1}/{epochs}, Score: {total_reward}")
