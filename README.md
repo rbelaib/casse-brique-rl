@@ -7,7 +7,7 @@
 ## 🚀 Fonctionnalités
 
 - 🎮 Jeu de casse-brique classique
-- 🧠 Intelligence artificielle utilisant le renforcement apprentissage
+- 🧠 Intelligence artificielle utilisant l'apprentissage par renforcement
 - 📊 Entraînement par exploration, jeu autonome
 
 ## 🛠️ Installation
