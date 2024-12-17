@@ -1,4 +1,5 @@
-from rl_agent.train import train_agent, evaluate
+import argparse
+from rl_agent.train import play_agent, evaluate
 from rl_agent.agent import DQNAgent
 from rl_agent.environment import BrickBreakerEnv
 import matplotlib.pyplot as plt
@@ -30,26 +31,22 @@ def play_with_trained_agent(agent, game):
     print(f"Final score: {total_reward}")
 
 
+def main():
+    # Configurer les arguments de ligne de commande
+    parser = argparse.ArgumentParser(description="Train or play with a BrickBreaker RL Agent.")
+    parser.add_argument("mode", nargs="?", default="play", choices=["train", "play"],
+                        help="Mode: train the agent or play with a trained model. Default is 'play'.")
+    parser.add_argument("--epochs", type=int, default=1, help="Number of epochs for training or playing.")
+    parser.add_argument("--model", type=str, default="models/final_models.h5", help="Path to save or load the model.")
+
+    args = parser.parse_args()
+
+    if args.mode == "train":
+        print(f"Training the agent for {args.epochs} epochs.... Model will be saved to {args.model}")
+        play_agent(epochs=args.epochs, model_path=args.model)
+    elif args.mode == "play":
+        print(f"Playing the game with model: {args.model}...")
+        play_agent(epochs=1, train=False, model_path=args.model)
 
 if __name__ == "__main__":
-    # train_agent(episodes=10)  # Entraîne l'agent pour 500 épisodes
-    # print("Training complete. Evaluating agent...")
-    # evaluate(num_episodes=1)  # Évaluation de l'agent après l'entraînement
-    # env = BrickBreakerEnv()
-    # agent = DQNAgent(state_size=env.observation_space, action_size=len(env.action_space))
-    # agent.load_model("models/final_models.h5")  # Charger le modèle entraîné
-    # print("Model loaded. Starting game...")
-    train_agent(train = True, episodes=500, model_path='models/banger.h5')  # Entraîne l'agent pour 500 épisodes
-
-    # # Jouer avec l'agent entraîné
-    # load the model and put it in the agent
-
-    #play_with_trained_agent(agent, env)
-
-
-
-
-
-
-
-
+    main()

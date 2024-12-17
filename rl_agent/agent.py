@@ -12,7 +12,7 @@ class DQNAgent:
         self.memory = deque(maxlen=2000)
         self.gamma = 0.95  # Facteur de réduction
         self.epsilon = 1.0  # Taux d'exploration initial
-        self.epsilon_decay = 0.995 # Taux de décroissance de l'exploration à chaque epoch
+        self.epsilon_decay = 0.99 # Taux de décroissance de l'exploration à chaque epoch
         self.epsilon_min = 0.01 # Taux d'exploration minimal
         self.learning_rate = 0.001 # Taux d'apprentissage
         self.model = self._build_model()
@@ -70,9 +70,9 @@ class DQNAgent:
         # Si le modèle obtient un bon score, on réduit l'exploration plus rapidement
         # Je ne sais pas si c'est vraiment une bonne idée, mais les résultats obtenus ne sont pas mauvais
         if reward_total > -50:
-            self.epsilon *= 0.9
+            self.epsilon *= 0.8
         if reward_total > 0:
-            self.epsilon *= 0.85
+            self.epsilon *= 0.5
 
     def save(self, path):
         """Sauvegarde le modèle."""
