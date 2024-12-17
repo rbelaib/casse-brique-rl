@@ -4,6 +4,10 @@ from game.game import BrickBreakerGame
 
 class BrickBreakerEnv:
     def __init__(self, width=400, height=600):
+        """ Initialisation de l'environnement.
+        width: largeur de la fenêtre
+        height: hauteur de la fenêtre
+        """
         self.game = BrickBreakerGame(width, height, manual_control=False)
         self.action_space = [-30, 0, 30]  # Paddle : gauche, immobile, droite
         self.observation_space = 5  # ball_x, ball_y, ball_dx, ball_dy, paddle_x
@@ -17,16 +21,16 @@ class BrickBreakerEnv:
         return self.get_state()
 
     def step(self, action, previous_brick_count):
+        """ Exécute une action et renvoie l'état suivant, la récompense, et si le jeu est terminé."""
         # Mouvement du paddle et de la balle
         reward_instant = 0
         self.game.paddle.move(action)
         self.game.ball.move()
-        self.game.check_collisions()
+        self.game.check_collisions() # Gestion des collisions
         len_bricks = len(self.game.bricks)
         if len_bricks < previous_brick_count:
-            reward_instant = 10
-
-
+            reward_instant = 10 # Récompense pour avoir cassé une brique
+            
         # Punir si la balle tombe hors écran
         if self.game.ball.get_coords()[3] >= self.game.height - 10:
             reward_instant = -100  # Pénalité pour perte de balle

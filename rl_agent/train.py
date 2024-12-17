@@ -6,14 +6,15 @@ from rl_agent.environment import BrickBreakerEnv
 from rl_agent.agent import DQNAgent
 
 def play_agent(epochs=500, batch_size=32, delay=0.00001, train=True, model_path="models/final_models.h5"):
+    """ Entraine l'agent pour jouer au jeu"""
     env = BrickBreakerEnv()
     agent = DQNAgent(state_size=env.observation_space, action_size=len(env.action_space))
     if train:
         initial_weights = agent.model.get_weights()
         print("Initial weights:", initial_weights)
     if not train:
-        agent.load_model(model_path)
-        agent.epsilon = 0.3
+        agent.load_model(model_path) # Charge le modèle sauvegardé
+        agent.epsilon = 0.3 # Réduit l'exploration
     
     for epoch in range(epochs):
         state = env.reset()
@@ -23,23 +24,23 @@ def play_agent(epochs=500, batch_size=32, delay=0.00001, train=True, model_path=
             env.render()  # Permet de voir le jeu pendant l'entraînement
             time.sleep(delay)
             
-            action_index = agent.act(state)
-            action = env.action_space[action_index]
-            next_state, reward, done, current_brick_count = env.step(action, previous_brick_count)
+            action_index = agent.act(state) # Choisit une action
+            action = env.action_space[action_index] # Convertit l'index en action
+            next_state, reward, done, current_brick_count = env.step(action, previous_brick_count) # Exécute l'action
             if train:
-                agent.remember(state, action_index, reward, next_state, done)
+                agent.remember(state, action_index, reward, next_state, done) # Ajoute l'expérience à la mémoire
             state = next_state
             total_reward += reward
             previous_brick_count = current_brick_count
 
             if done:
-                print(f"epoch {epoch + 1}/{epochs}, Score: {total_reward}")
+                print(f"Epoch {epoch + 1}/{epochs}, Score: {total_reward}")
                 break
 
         if train:
-            agent.replay(batch_size)
+            agent.replay(batch_size) # Entraîne le modèle
             agent.update_epsilon(total_reward)
-            # save the model every 50 epochs
+            # Model sauvegardé toutes les 50 épochs
             if epoch % 50 == 0 or epoch == epochs - 1:
                 final_weights = agent.model.get_weights()
                 print("Weights:", final_weights)
@@ -62,6 +63,6 @@ def evaluate(num_epochs=100):
             epoch_score += reward
         total_score += epoch_score
      average_score = total_score / num_epochs
-     print(f"Average Score after training: {average_score}")
+     print(f"Average score after training: {average_score}")
 
 

@@ -6,6 +6,10 @@ import math
 
 class BrickBreakerGame:
     def __init__(self, width=400, height=600, manual_control=True):
+        """ Initialisation du jeu.
+        width: largeur de la fenêtre
+        height: hauteur de la fenêtre
+        manual_control : activation du contrôle manuel"""
         self.width = width
         self.height = height
         self.manual_control = manual_control  # Contrôle manuel activé ou non
@@ -28,7 +32,7 @@ class BrickBreakerGame:
             50, 10, text=f"Score: {self.score}", fill="white", font=("Arial", 12)
         )
 
-            # Liaison des contrôles (si manuel)
+        # Liaison des contrôles (si manuel)
         if self.manual_control:
             self.window.bind("<Left>", lambda _: self.paddle.move(-30))  # Vitesse augmentée
             self.window.bind("<Right>", lambda _: self.paddle.move(30))  # Vitesse augmentée
@@ -74,7 +78,7 @@ class BrickBreakerGame:
                     ball_coords[3] >= brick_coords[1] and ball_coords[1] <= brick_coords[3]):
                 self.bricks.remove(brick)
                 self.ball.bounce_vertical()
-                self.update_score(10)  # Incrémenter le score
+                self.update_score(10)  # Incrément du score
                 brickid = id(brick)
                 brick.destroy()
                 return brickid
@@ -119,6 +123,7 @@ class BrickBreakerGame:
         self.window.mainloop()
         
     def check_for_destroyed_bricks(self):
+        """ Vérifie si des briques ont été détruites par la balle et les renvoie."""
         destroyed_bricks = []
         for brick in self.bricks:
             if self.is_ball_colliding_with_brick(brick):

@@ -1,5 +1,6 @@
 class Paddle:
     def __init__(self, canvas, x, y, width=80, height=10, color="white"):
+        """ Initialise la raquette. """
         self.canvas = canvas
         self.width = width
         self.height = height

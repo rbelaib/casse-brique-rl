@@ -6,6 +6,7 @@ import matplotlib.pyplot as plt
 import time
 
 def play_with_trained_agent(agent, game):
+    """ Joue avec un agent entraîné."""
     state = game.reset()  # Réinitialiser le jeu
     done = False
     total_reward = 0

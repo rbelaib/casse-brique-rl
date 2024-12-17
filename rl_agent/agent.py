@@ -7,6 +7,10 @@ import pickle
 
 class DQNAgent:
     def __init__(self, state_size, action_size):
+        """ Initialisation de l'agent.
+        state_size: taille de l'espace d'état
+        action_size: taille de l'espace d'actions"""
+        
         self.state_size = state_size
         self.action_size = action_size
         self.memory = deque(maxlen=2000)
@@ -50,8 +54,8 @@ class DQNAgent:
         # Prépare l'état et l'état suivant (pour que ça aille plus vite)
         states = np.array([sample[0] for sample in batch])
         next_states = np.array([sample[3] for sample in batch])
-        q_values = self.model.predict(states, verbose=0)
-        q_values_next = self.model.predict(next_states, verbose=0)
+        q_values = self.model.predict(states, verbose=0) # Prédiction des q-values de l'état actuel
+        q_values_next = self.model.predict(next_states, verbose=0) # Prédiction des q-values de l'état suivant
 
         for i, (state, action, reward, next_state, done) in enumerate(batch):
             target = reward
@@ -68,7 +72,7 @@ class DQNAgent:
         if self.epsilon > self.epsilon_min:
             self.epsilon *= self.epsilon_decay
         # Si le modèle obtient un bon score, on réduit l'exploration plus rapidement
-        # Je ne sais pas si c'est vraiment une bonne idée, mais les résultats obtenus ne sont pas mauvais
+        # On ne sait pas si c'est vraiment une bonne idée, mais les résultats obtenus ne sont pas mauvais
         if reward_total > -50:
             self.epsilon *= 0.8
         if reward_total > 0:
