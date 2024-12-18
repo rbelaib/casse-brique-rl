@@ -24,7 +24,8 @@ class DQNAgent:
     def _build_model(self):
         """Neural network assez simple"""
         model = tf.keras.Sequential([
-            tf.keras.layers.Dense(24, input_dim=self.state_size, activation='relu'),
+            tf.keras.layers.Input(shape=(self.state_size,)),
+            tf.keras.layers.Dense(24, activation='relu'),
             tf.keras.layers.Dense(24, activation='relu'),
             tf.keras.layers.Dense(self.action_size, activation='linear')
         ])
