@@ -41,7 +41,7 @@ permet de lancer l'apprentissage avec les paramètres spécifiés plus haut.
 Pour lancer une partie en autonomie complète depuis un modèle entrainé :
 
 ```bash
-main.py play --model=model.h5
+main.py play --model=models/model.h5
 ```
 L'option ```--model``` permet de choisir le modèle à utiliser.
 
