@@ -41,7 +41,7 @@ def play_agent(epochs=500, batch_size=32, delay=0.00001, train=True, model_path=
             agent.replay(batch_size) # Entraîne le modèle
             agent.update_epsilon(total_reward)
             # Model sauvegardé toutes les 50 épochs
-            if epoch % 50 == 0 or epoch == epochs - 1:
+            if (epoch % 50 == 0 and epoch != 0) or epoch == epochs - 1:
                 final_weights = agent.model.get_weights()
                 print("Weights:", final_weights)
                 agent.save(model_path)
