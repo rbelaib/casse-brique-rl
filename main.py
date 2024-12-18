@@ -35,10 +35,20 @@ def play_with_trained_agent(agent, game):
 def main():
     # Configurer les arguments de ligne de commande
     parser = argparse.ArgumentParser(description="Train or play with a BrickBreaker RL Agent.")
-    parser.add_argument("mode", nargs="?", default="play", choices=["train", "play"],
-                        help="Mode: train the agent or play with a trained model. Default is 'play'.")
-    parser.add_argument("--epochs", type=int, default=1, help="Number of epochs for training or playing.")
-    parser.add_argument("--model", type=str, default="models/model_300_epochs.h5", help="Path to save or load the model.")
+    parser.add_argument("mode", choices=["train", "play"],
+                        help="Mode: train the agent or play with a trained model.")
+    parser.add_argument("--epochs", type=int, default=1, 
+                        help="Number of epochs for training or playing.")
+
+    # Analyser les arguments initiaux pour déterminer le mode
+    preliminary_args, _ = parser.parse_known_args()
+    
+    # Définir la valeur par défaut du modèle selon le mode
+    default_model = "models/trainedmodel.h5" if preliminary_args.mode == "train" else "models/model_300_epochs.h5"
+    
+    # Ajouter l'argument du modèle avec la valeur par défaut dynamique
+    parser.add_argument("--model", type=str, default=default_model, 
+                        help="Path to save or load the model. Default depends on mode.")
 
     args = parser.parse_args()
 
