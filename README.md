@@ -31,7 +31,9 @@ python3 main.py train --epochs=100 --model=models/final_models.h
 ```
 L'option ```train``` permet de spécifier que vous souhaitez **entrainer** le modèle, ```--epochs``` permet de préciser le nombre d'épochs d'entraînement et ```--model``` spécifie l'emplacement de sauvegarde du modèle entrainé.
 
-Note : Les options ne sont pas nécessaires, --epochs a pour valeur 100 par défaut et model a par défaut models/model_300_epochs.h5
+Note : Les options ne sont pas nécessaires :
+- --epochs a pour valeur 100 par défaut et model a par défaut models/model_300_epochs.h5
+- -- model a par défaut models/model_300_epochs.h5 quand on est en mode play, et models/trainedmodel.h5 quand on est en mode train 
 
 Lancer la commande :
 
