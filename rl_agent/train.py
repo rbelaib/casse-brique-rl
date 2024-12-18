@@ -5,7 +5,7 @@ import time
 from rl_agent.environment import BrickBreakerEnv
 from rl_agent.agent import DQNAgent
 
-def play_agent(epochs=500, batch_size=32, delay=0.00001, train=True, model_path="models/final_models.h5"):
+def play_agent(epochs=500, batch_size=32, delay=0.00001, train=True, model_path="models/model_300_epochs.h5"):
     """ Entraine l'agent pour jouer au jeu"""
     env = BrickBreakerEnv()
     agent = DQNAgent(state_size=env.observation_space, action_size=len(env.action_space))

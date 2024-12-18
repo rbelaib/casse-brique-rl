@@ -38,7 +38,7 @@ def main():
     parser.add_argument("mode", nargs="?", default="play", choices=["train", "play"],
                         help="Mode: train the agent or play with a trained model. Default is 'play'.")
     parser.add_argument("--epochs", type=int, default=1, help="Number of epochs for training or playing.")
-    parser.add_argument("--model", type=str, default="models/final_models.h5", help="Path to save or load the model.")
+    parser.add_argument("--model", type=str, default="models/model_300_epochs.h5", help="Path to save or load the model.")
 
     args = parser.parse_args()
 
